@@ -22,7 +22,7 @@ Useful Functions:
 
 (Supports either NASDAQ or NYSE, and all the tickers that fall under it. Refresh rate is in seconds.)
 ```
-rtt.pull_price ('NYSE', 'SPY', 5)
+print rtt.pull_price ('NYSE','SPY',5)
 ```
 
 ## TODO
