@@ -29,7 +29,7 @@ pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
 * `pull_live_data` format: '[ticker_data]'  (E.g, Current Time, Realtime Price, 15-Min Delayed Volume)
 * `pull_historical_data` format: '[day][ticker_data]' (E.g, Date, Open, Close, High, Low, Volume)
 
-(Fuctions support NASDAQ or NYSE, and all the tickers under them. Refresh rate is in seconds.)
+(Fuctions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 ```
 rtt.pull_live_data('NASDAQ','SPY')
 rtt.pull_historical_data('SPY','2017-01-28','2017-02-01')
@@ -38,6 +38,6 @@ rtt.pull_price ('NYSE','SPY',5)
 
 ## TODO
 
-*  Parsing Yahoo Finance historical data
+*  ~~Parsing Yahoo Finance historical data~~
 *  Calculating Indicators on the fly
 *  matplotlib & pyfolio integration (possibly)
