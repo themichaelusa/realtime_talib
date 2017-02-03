@@ -1,5 +1,4 @@
 import realtime_talib as rtt
 
-while True: 
-
-	print rtt.pull_price('NYSE','SPY', 1)
+rtt.pull_live_data('NASDAQ','SPY')
+rtt.pull_historical_data('SPY','2017-01-28','2017-02-01')
