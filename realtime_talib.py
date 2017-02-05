@@ -1,57 +1,54 @@
-import requests
-import urllib
-import json
-import time
+import parse_data as pd
+import numpy as np
+import talib
+import time 
 
-def pull_live_data(exchange, ticker, delayed_vol):
+from talib import abstract
+from talib.abstract import *
 
-	# Exchange support: NASDAQ, NYSE
-	url = "http://finance.google.com/finance/info?client=ig&q="+ exchange + "%3A" + ticker
+def realtime_init (ticker, start_date, end_date):
+	nump_hist_data = np.asarray(pd.pull_historical_data(ticker, start_date, end_date, True), dtype=float)
 
-	raw_data = urllib.urlopen(url).read()
-	formatted_data = raw_data[5:len(raw_data)-3]
-	parsed_ticker_data = json.loads(formatted_data)
+	inputs = {
+  		'open': nump_hist_data[0],
+    	'high': nump_hist_data[1],
+    	'low': nump_hist_data[2],
+    	'close': nump_hist_data[3],
+    	'volume': nump_hist_data[4]
+	}
 
-	# Yahoo Finance Delayed Volume (15-Min)
-	if delayed_vol == True:
-		delayed_volume = requests.get('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%20%22%27'+ ticker +'%27%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=').json()
-		live_data = [parsed_ticker_data['ltt'],parsed_ticker_data['l_cur'],delayed_volume['query']['results']['quote']['Volume']]
-		return live_data
-	
-	else:
-		live_data = [parsed_ticker_data['ltt'],parsed_ticker_data['l_cur']]
-		return live_data
+	return inputs
 
-def pull_historical_data(ticker, start_date, end_date):
 
-	# Date format: 'Year-Month-Date' --> '2017-01-25'
-	url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22"+ ticker +"%22%20and%20startDate%20%3D%20%22"+ start_date +"%22%20and%20endDate%20%3D%20%22"+ end_date +"%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
+def realtime_SMA(exchange, ticker, start_date, end_date, timeperiod, inc_delayed_volume):
 
-	raw_data = requests.get(url).json()
-	date = raw_data['query']['results']['quote'][0]['Date']  				
-	open_price = raw_data['query']['results']['quote'][0]['Open']  		    
-	close_price = raw_data['query']['results']['quote'][0]['Close']  	    
-	high_price = raw_data['query']['results']['quote'][0]['High']  		    
-	low_price = raw_data['query']['results']['quote'][0]['Low']  			
-	volume = raw_data['query']['results']['quote'][0]['Volume']  		
+	inputs = realtime_init(ticker,start_date,end_date) 
+	sma = abstract.SMA
+	output = SMA(inputs, timeperiod)
+	inputs['close'][len(inputs['close'])-1] = pd.pull_live_data(exchange,ticker,inc_delayed_volume)[1]
+	return output[len(output)-1]
 
-	end_raw = ['Date','Open','Close','High','Low','Volume']
-	hist_data = [[date],[open_price],[close_price],[high_price],[low_price],[volume]]
+def realtime_EMA(exchange, ticker, start_date, end_date, timeperiod, inc_delayed_volume):
 
-	for i in range(len(hist_data)):
-		for j in range(len(raw_data['query']['results']['quote'])):
-			hist_data[i].append(raw_data['query']['results']['quote'][j][end_raw[i]])
-		hist_data[i].reverse()
-	
-	return hist_data
+	inputs = realtime_init(ticker,start_date,end_date) 
+	ema = abstract.EMA
+	output = EMA(inputs, timeperiod)
+	inputs['close'][len(inputs['close'])-1] = pd.pull_live_data(exchange,ticker,inc_delayed_volume)[1]
+	return output[len(output)-1]	
 
-def formatted_price(exchange, ticker, refresh_rate):
+def realtime_DEMA(exchange, ticker, start_date, end_date, timeperiod, inc_delayed_volume):
 
-	url = "http://finance.google.com/finance/info?client=ig&q="+ exchange + "%3A" + ticker
+	inputs = realtime_init(ticker,start_date,end_date) 
+	dema = abstract.DEMA
+	output = DEMA(inputs, timeperiod)
+	inputs['close'][len(inputs['close'])-1] = pd.pull_live_data(exchange,ticker,inc_delayed_volume)[1]
+	return output[len(output)-1]	
 
-	raw_data = urllib.urlopen(url).read()
-	formatted_data = raw_data[5:len(raw_data)-3]
-	parsed_ticker_data = json.loads(formatted_data)
+def realtime_TEMA(exchange, ticker, start_date, end_date, timeperiod, inc_delayed_volume):
 
-	return str(parsed_ticker_data['t'] + '|' +' Price: ' + parsed_ticker_data['l_cur'] + ' | Change: ' + parsed_ticker_data['cp'] + "%")
-	time.sleep(refresh_rate)	
+	inputs = realtime_init(ticker,start_date,end_date) 
+	tema = abstract.TEMA
+	output = TEMA(inputs, timeperiod)
+	inputs['close'][len(inputs['close'])-1] = pd.pull_live_data(exchange,ticker,inc_delayed_volume)[1]
+	return output[len(output)-1]	
+
