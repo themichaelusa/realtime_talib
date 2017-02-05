@@ -14,7 +14,7 @@ Realtime TA-Lib provides.
 
 **Basic Overview:**
 
-* Uses only native Python libraries (urllib, json) to scrape the finacial JSON data
+* Uses only native Python libraries (urllib, json) to scrape the Google/Yahoo Finance JSON data
 * Parses JSON and formats historical & live data into 2D/1D Lists
 * Converts Lists to NumPy Arrays to form TA-Lib input dictionary
 * [TA-Lib Abstract API](https://mrjbq7.github.io/ta-lib/abstract.html) does remainder of the grunt work
@@ -59,8 +59,8 @@ while True:
 * `formatted_price(exch, ticker, refresh_rate)`
 
 pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
-* `pull_live_data` format: '[ticker_data]'(0 = Current Time|1 = Realtime Price|2 = 15-Min Delayed Vol)
-* `pull_historical_data` format: '[day][ticker_data]' (0 = Date|1 = Open|2 = Close|3 = High|4 = Low|5 = Vol)
+* `pull_live_data` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
+* `pull_historical_data` format: `[day][ticker_data]`(0 = Date|1 = Open|2 = Close|3 = High|4 = Low|5 = Vol)
 
 (Fuctions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 
@@ -80,8 +80,8 @@ AMD| Price: 12.24 | Change: -0.33%
 
 ## TODO
 
-* PyPI support (pip install...)
-*  ~~Parsing Yahoo Finance historical data~~
-*  ~~Calculating Indicators on the fly~~
-*  Add support for 150+ TA-Lib indicators
-*  matplotlib & pyfolio integration (possibly)
+- [ ] PyPI support (pip install...)
+- [x] Parsing Yahoo Finance historical data
+- [x] Calculating Indicators on the fly
+- [ ] Add support for 150+ TA-Lib indicators
+- [ ] Matplotlib & Pyfolio integration (possibly)
