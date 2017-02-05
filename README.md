@@ -13,7 +13,6 @@ Experienced back-testers might also find this useful, mainly because of the spee
 Realtime TA-Lib provides.
 
 **Basic Overview:**
-
 * Uses only native Python libraries (urllib, json) to scrape the Google/Yahoo Finance JSON data
 * Parses JSON and formats historical & live data into 2D/1D Lists
 * Converts Lists to NumPy Arrays to form TA-Lib input dictionary
