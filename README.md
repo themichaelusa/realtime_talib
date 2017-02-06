@@ -31,9 +31,9 @@ pip install realtime_talib
 import realtime_talib as rtt
 import time
 
-while True:
+init = rtt.realtime_init('NASDAQ','SPY','2016-01-01','2017-02-01',False)
 
-	init = rtt.realtime_init('NASDAQ','SPY','2017-01-28','2017-02-01',False)
+while True:
 	
 	print rtt.realtime_MA(1, 3, init)
 	print rtt.realtime_MACD(1, 12, 26, 9, init)[2]
@@ -41,6 +41,14 @@ while True:
 	print rtt.realtime_RSI(1, 25, init)
 
 	time.sleep(1)
+	
+...
+
+ Terminal Outputs:
+ 226.92278436
+ 0.0184101640085
+ 227.320467648
+ 62.1289093161
 ```
 
 ### Basic Indicator Functions:
@@ -64,14 +72,16 @@ pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
 (Functions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 
 ```python
+import parse_data as pd
+
 # Inputs:
-print rtt.pull_live_data('NYSE','SPY')[1]
-print rtt.pull_historical_data('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
-print rtt.formatted_price ('NASDAQ','AMD',5)
+print pd.pull_live_data('NYSE','SPY')[1]
+print pd.pull_historical_data('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
+print pd.formatted_price ('NASDAQ','AMD',5)
 
 ...
 
-# Outputs:
+Terminal Outputs:
 229.34
 108.39
 AMD| Price: 12.24 | Change: -0.33%
