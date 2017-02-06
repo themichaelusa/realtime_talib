@@ -2,7 +2,7 @@
 
 Fast & Lightweight library that calculates TA-Lib Technical Indicators live. **Built with Python 2.7!**
 
-My first real Python project too!
+**Not done yet,** but my first real Python project!
 
 The Quantopian and Pipeline API's are confusing at first, backtrader is confusing... the list goes on.
 It's pretty easy to get overwhelmed.
@@ -61,7 +61,7 @@ pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
 * `pull_live_data` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
 * `pull_historical_data` format: `[day][ticker_data]`(0 = Date|1 = Open|2 = Close|3 = High|4 = Low|5 = Vol)
 
-(Fuctions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
+(Functions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 
 ```python
 # Inputs:
