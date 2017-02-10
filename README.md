@@ -2,7 +2,7 @@
 
 Fast & Lightweight library that calculates TA-Lib Technical Indicators live. **Built with Python 2.7!**
 
-**Not done yet,** but my first real Python project!
+**Still a WIP,** but my first real Python project!
 
 The Quantopian and Pipeline API's are confusing at first, backtrader is confusing... the list goes on.
 It's pretty easy to get overwhelmed.
@@ -29,18 +29,19 @@ pip install realtime_talib
 
 ```python
 import realtime_talib as rtt
+from rtt import realtime, pipeline, indicators
 import time
 
-init = rtt.realtime_init('NASDAQ','SPY','2016-01-01','2017-02-01',False)
+init = realtime_init('NASDAQ','SPY','2016-01-01','2017-02-01',False)
 
 while True:
 	
-	print rtt.realtime_MA(1, 3, init)
-	print rtt.realtime_MACD(1, 12, 26, 9, init)[2]
-	print rtt.realtime_BBANDS(1, 2, 2, 10, init)[1]
-	print rtt.realtime_RSI(1, 25, init)
+	print MA(1, 3, init)
+	print MACD(1, 12, 26, 9, init)[2]
+	print BBANDS(1, 2, 2, 10, init)[1]
+	print RSI(1, 25, init)
 
-	time.sleep(1)
+	time.sleep(5)
 	
 ...
 
@@ -54,10 +55,12 @@ while True:
 ### Basic Indicator Functions:
 
 * `realtime_init(exchange, ticker, start_date, end_date, inc_delayed_volume)`
-* `realtime_MA(ma_type, timeperiod, init)`
-* `realtime_MACD(ma_type, fastperiod, slowperiod, signalperiod, init)`
-* `realtime_RSI(ma_type, timeperiod, init)`
-* `realtime_BBANDS(ma_type, nbdevup, nbdevdn, timeperiod, init)`
+* `MA(ma_type, timeperiod, init)`
+* `MACD(ma_type, fastperiod, slowperiod, signalperiod, init)`
+* `RSI(ma_type, timeperiod, init)`
+* `BBANDS(ma_type, nbdevup, nbdevdn, timeperiod, init)`
+
+(Check the docs at the [RTT Temporary Indicator Doc](https://shrib.com/9G1SclqXIIwm2Ep) for the full list.)
 
 ### Other Useful Functions (Raw Data):
 
@@ -72,12 +75,13 @@ pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
 (Functions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 
 ```python
-import parse_data as pd
+import realtime_talib as rtt
+from rtt import pipeline 
 
 # Inputs:
-print pd.pull_live_data('NYSE','SPY')[1]
-print pd.pull_historical_data('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
-print pd.formatted_price ('NASDAQ','AMD',5)
+print pull_live_data('NYSE','SPY')[1]
+print pull_historical_data('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
+print formatted_price ('NASDAQ','AMD',5)
 
 ...
 
@@ -90,7 +94,8 @@ AMD| Price: 12.24 | Change: -0.33%
 ## TODO
 
 - [ ] PyPI support (pip install...)
+- [x] Multi-threading support
 - [x] Parsing Yahoo Finance historical data
 - [x] Calculating Indicators on the fly
-- [ ] Add support for 150+ TA-Lib indicators
+- [ ] Add support for 40+ TA-Lib indicators
 - [ ] Matplotlib & Pyfolio integration (possibly)
