@@ -1,0 +1,19 @@
+
+
+
+
+
+locals().keys() ------> gives you local vars of function you are calling in a list([])
+
+inspect.getargspec(init_func)[0] -------> gives you function arg names (the one you are calling in), in a list 
+
+inspect.stack()[0][3] --------> gets you name of function you are inside of
+
+
+
+
+
+
+
+from numpy import genfromtxt
+my_data = genfromtxt('my_file.csv', delimiter=',') --------> turns CSV file into numpy array
