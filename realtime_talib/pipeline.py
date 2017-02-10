@@ -1,6 +1,5 @@
 import urllib
 import json
-import time
 
 def pull_live_data(exchange, ticker, delayed_vol):
 
@@ -55,7 +54,7 @@ def pull_historical_data(ticker, start_date, end_date, talib_use):
 
 	
 
-def formatted_price(exchange, ticker, refresh_rate):
+def formatted_price(exchange, ticker):
 
 	# Exchange support: NASDAQ, NYSE
 	url = "http://finance.google.com/finance/info?client=ig&q="+ exchange + "%3A" + ticker
@@ -64,5 +63,17 @@ def formatted_price(exchange, ticker, refresh_rate):
  	formatted_data = raw_data[5:len(raw_data)-3]
  	parsed_ticker_data = json.loads(formatted_data)
 
-	return str(parsed_ticker_data['t'] + '|' +' Price: ' + parsed_ticker_data['l_cur'] + ' | Change: ' + parsed_ticker_data['cp'] + "%")
-	time.sleep(refresh_rate)	
+	return str(parsed_ticker_data['t'] + '|' +' Price: ' + parsed_ticker_data['l_cur'] + ' | Change: ' + parsed_ticker_data['cp'] + "%")	
+
+
+def btc_data_pipeline():
+
+	url = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
+	raw_data = urllib.urlopen(url).read()
+ 	parsed_btc_data = json.loads(raw_data)
+
+ 	live_btc_data = [parsed_btc_data['high'], parsed_btc_data['low'], parsed_btc_data['open'], parsed_btc_data['last'], parsed_btc_data['volume']]
+
+
+
+	

@@ -1,4 +1,5 @@
 import realtime_talib as rtt
+from rtt import realtime, pipeline, indicators
 import time
 
 # nump_live_data = np.asarray(rtt.pull_live_data('NASDAQ','SPY', False))
@@ -6,15 +7,30 @@ import time
 
 # print nump_live_data[1]
 # print nump_hist_data[0][0]
-# print rtt.formatted_price('NYSE','AAPL',5)
+# print rtt.formatted_price('NYSE','AAPL')
+
+init = realtime_init('NASDAQ','SPY','2016-01-01','2017-02-09',False)
 
 while True:
 
-	init = rtt.realtime_init('NASDAQ','SPY','2017-01-28','2017-02-01',False)
-	
-	print rtt.realtime_MA(1, 3, init)
-	print rtt.realtime_MACD(1, 12, 26, 9, init)[2]
-	print rtt.realtime_BBANDS(1, 2, 2, 10, init)[1]
-	print rtt.realtime_RSI(1, 25, init)
+	# Inputs:
+	time = pull_live_data('NASDAQ','SPY', False)[0]
+	price = pull_live_data('NASDAQ','SPY', False)[1]
 
-	time.sleep(1)
+	sma = MA(1, 3, init)[0]
+	macdhist = MACD(1, 12, 26, 9, init)[2]
+	upperband = BBANDS(1, 2, 2, 10, init)[0]
+	rsi = RSI(1, 25, init)
+
+
+	# Outputs:
+	# 226.92278436
+	# 0.0184101640085
+	# 227.320467648
+	# 62.1289093161
+
+
+
+
+
+
