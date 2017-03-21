@@ -2,20 +2,24 @@
 
 Fast & Lightweight library that calculates TA-Lib Technical Indicators live. **Built with Python 2.7!**
 
-**Still a WIP,** but my first real Python project!
+Provides an open source alternative to something like the TD Ameritrade API, and provides near-identical
+results (when it works) and as a result could save each RTT user up to **$500,000** (supposed premium by TD API).
 
-The Quantopian and Pipeline API's are confusing at first, backtrader is confusing... the list goes on.
-It's pretty easy to get overwhelmed.
+Really useful tool for algotrading or just tracking technical indicators in real-time.
 
-Personally, I think this could be a really useful tool for a beginner in algotrading. 
+Personally, I'm integrating this tool into a [BTC Trading Bot](https://github.com/shobrook/gecko) and using the live technical signals to form a usable Feature Space for an Recurrent Neural Network.
 
-Experienced back-testers might also find this useful, mainly because of the speed and abstraction that
-Realtime TA-Lib provides.
+**Most Recent Update(3/20/2017):** 
+* Added Indicator object to vastly simplify use of RTT (still issues with multiple indicators at once)
+* Added Multithreading support via a custom use of the threading library Timer class
+* Tons of refactoring and optimizing for readbility and performance (hopefully)
 
 **Basic Overview:**
-* Uses only native Python libraries (urllib, json) to scrape the Google/Yahoo Finance JSON data
-* Parses JSON and formats historical & live data into 2D/1D Lists
-* Converts Lists to NumPy Arrays to form TA-Lib input dictionary
+* Uses only native Python libraries (urllib, json) to scrape the Google/Yahoo Finance JSON/CSV data
+* Parses JSON, converts CSV, and formats historical & live data into Pandas Dataframe
+* Converts Dataframes to NumPy Arrays to form TA-Lib input dictionary
+* Indicator Object specifies dataframe attributes via Ticker and Timeframe
+* CustomTimer class splits the updating tasks into multiple threads
 * [TA-Lib Abstract API](https://mrjbq7.github.io/ta-lib/abstract.html) does remainder of the grunt work
 
 ## Installation
@@ -29,20 +33,14 @@ pip install realtime_talib
 
 ```python
 import realtime_talib as rtt
-from rtt import realtime, pipeline, indicators
-import time
 
-init = realtime_init('NASDAQ','SPY','2016-01-01','2017-02-01',False)
-
-while True:
+SPY_Ind = rtt.Indicator("SPY", 2016-01-01")
 	
-	print MA(1, 3, init)
-	print MACD(1, 12, 26, 9, init)[2]
-	print BBANDS(1, 2, 2, 10, init)[1]
-	print RSI(1, 25, init)
+print SPY_Ind.MA(1, 3)
+print SPY_Ind.(1, 12, 26, 9)[2]
+print SPY_Ind.BBANDS(1, 2, 2, 10)[1]
+print SPY_Ind.RSI(1, 25)
 
-	time.sleep(5)
-	
 ...
 
  Terminal Outputs:
@@ -52,25 +50,24 @@ while True:
  62.1289093161
 ```
 
-### Basic Indicator Functions:
+### Basic Use & Indicator Functions:
 
-* `realtime_init(exchange, ticker, start_date, end_date, inc_delayed_volume)`
-* `MA(ma_type, timeperiod, init)`
-* `MACD(ma_type, fastperiod, slowperiod, signalperiod, init)`
-* `RSI(ma_type, timeperiod, init)`
-* `BBANDS(ma_type, nbdevup, nbdevdn, timeperiod, init)`
+* `Indicator(ticker, endDate)`
+
+* `Indicator.MA(ma_type, timeperiod)`
+* `Indicator.MACD(ma_type, fastperiod, slowperiod, signalperiod)`
+* `Indicator.RSI(ma_type, timeperiod)`
+* `Indicator.BBANDS(ma_type, nbdevup, nbdevdn, timeperiod)`
 
 (Check the docs at the [RTT Temporary Indicator Doc](https://shrib.com/9G1SclqXIIwm2Ep) for the full list.)
 
 ### Other Useful Functions (Raw Data):
 
-* `pull_live_data(exch, ticker)`
-* `pull_historical_data(ticker, start_date, end_date)`
-* `formatted_price(exch, ticker, refresh_rate)`
+* `pullLiveData(exch, ticker)`
+* `pullHistoricalData(ticker, startDate, endDate)`
 
-pull_live_data returns a 1D List, and pull_historical_data returns a 2D List.
-* `pull_live_data` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
-* `pull_historical_data` format: `[day][ticker_data]`(0 = Date|1 = Open|2 = Close|3 = High|4 = Low|5 = Vol)
+pullLiveData returns a 1D List, and pullHistoricalData returns a [TA-Lib Input Dictionary](https://mrjbq7.github.io/ta-lib/abstract.html)
+* `pullLiveData` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
 
 (Functions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
 
@@ -79,16 +76,12 @@ import realtime_talib as rtt
 from rtt import pipeline 
 
 # Inputs:
-print pull_live_data('NYSE','SPY')[1]
-print pull_historical_data('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
-print formatted_price ('NASDAQ','AMD',5)
-
+print pullLiveData('NYSE','SPY')[1]
+print pullHistoricalData('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
 ...
 
 Terminal Outputs:
 229.34
-108.39
-AMD| Price: 12.24 | Change: -0.33%
 ```
 
 ## TODO
