@@ -34,7 +34,7 @@ pip install realtime_talib
 ```python
 import realtime_talib as rtt
 
-SPY_Ind = rtt.Indicator("SPY", 2016-01-01")
+SPY_Ind = rtt.Indicator("SPY", "2016-01-01")
 	
 print SPY_Ind.MA(1, 3)
 print SPY_Ind.(1, 12, 26, 9)[2]
