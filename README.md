@@ -64,12 +64,12 @@ print SPY_Ind.RSI(1, 25)
 ### Other Useful Functions (Raw Data):
 
 * `pullLiveData(exch, ticker)`
-* `pullHistoricalData(ticker, startDate, endDate)`
+* `pullHistoricalData(ticker, endDate)`
 
 pullLiveData returns a 1D List, and pullHistoricalData returns a [TA-Lib Input Dictionary](https://mrjbq7.github.io/ta-lib/abstract.html)
 * `pullLiveData` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
 
-(Functions support NASDAQ and NYSE, and all the tickers under them. Refresh rate is in seconds.)
+(Functions support NASDAQ and NYSE, and all the tickers under them.)
 
 ```python
 import realtime_talib as rtt
@@ -77,7 +77,7 @@ from rtt import pipeline
 
 # Inputs:
 print pullLiveData('NYSE','SPY')[1]
-print pullHistoricalData('NVDA','2017-01-31','2017-02-03')[1][2] #January 31st, 2017
+pullHistoricalData('NVDA','2015-02-03')[1][2] 
 ...
 
 Terminal Outputs:
