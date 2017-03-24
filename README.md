@@ -37,9 +37,8 @@ import realtime_talib as rtt
 SPY_Ind = rtt.Indicator("SPY", "2016-01-01")
 	
 print SPY_Ind.MA(1, 3)
-print SPY_Ind.(1, 12, 26, 9)[2]
-print SPY_Ind.(1, 12, 26, 9)[2]
-print SPY_Ind.(1, 12, 26, 9)[2]
+print SPY_Ind.MACD(1, 12, 26, 9)[2]
+print SPY_Ind.RSI(1, 12, 26, 9)[2]
 print SPY_Ind.BBANDS(1, 2, 2, 10)[1]
 print SPY_Ind.RSI(1, 25)
 
@@ -80,6 +79,7 @@ from rtt import pipeline
 # Inputs:
 print pullLiveData('NYSE','SPY')[1]
 pullHistoricalData('NVDA','2015-02-03')[1][2] 
+
 ...
 
 Terminal Outputs:
