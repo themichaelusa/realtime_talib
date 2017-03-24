@@ -1,37 +1,34 @@
-from threading import _Timer
 import pipeline as pl
+import threading
+import time
 import math
 
-class CustomTimer(_Timer):
+refreshTimer = TimerClass()
 
-    def __init__(self, interval, function, args=[], kwargs={}):
+class TimerClass(threading.Thread):
 
-        self._original_function = function
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.event = threading.Event()
 
-        super(CustomTimer, self).__init__(
-            interval, self._do_execute, args, kwargs)
+    def run(self):
+        while not self.event.is_set():
+            # print "Refresh thread for: "
+            self.event.wait(1)
 
-    def _do_execute(self, *a, **kw):
-        self.result = self._original_function(*a, **kw)
+    def stop(self):
+        self.event.set()
 
-    def join(self):
+def updateInputDict(histData, liveData):
 
-        super(CustomTimer, self).join()
-        return self.result
-
-def updateInputDict(ticker, endDate):
-
-	OrigInputDict = pl.pullHistoricalData(ticker, endDate)
-
-	inputRefreshTimer = CustomTimer(1, pl.pullLiveData, (ticker, True))
-	inputRefreshTimer.start()
+	refreshTimer.start()
+	refreshTimer.sleep(65)
+	refreshTimer.stop()
 	
-	talib_inputs = inputRefreshTimer.join() 
+	histData['close'][0] = liveData[1]
+	histData['volume'][0] = liveData[2]
 
-	OrigInputDict['close'][0] = talib_inputs[1]
-	OrigInputDict['volume'][0] = talib_inputs[2]
-
-	return OrigInputDict
+	return histData
 
 def firstNotNAN(talibOutput):
 
