@@ -1,26 +1,17 @@
 # Realtime TA-Lib
 
-Fast & Lightweight library that calculates TA-Lib Technical Indicators live. **Built with Python 2.7!**
-
-Provides an open source alternative to something like the TD Ameritrade API, and provides near-identical
-results (when it works) and as a result could save each RTT user up to **$500,000** (supposed premium by TD API).
+Fast & Lightweight library that calculates and updates TA-Lib Technical Indicators live, but also provides 
+historical Technical Indicator data in the form of Pandas Dataframes.
 
 Really useful tool for algotrading or just tracking technical indicators in real-time.
 
-Personally, I'm integrating this tool into a [BTC Trading Bot](https://github.com/shobrook/gecko) and using the live technical signals to form a usable Feature Space for an Recurrent Neural Network.
+Best performance when used with concurrency libraries like asyncio. Here's where I [started](https://hackernoon.com/asyncio-for-the-working-python-developer-5c468e6e2e8e).
 
-**Most Recent Update(3/20/2017):** 
-* Added Indicator object to vastly simplify use of RTT (still issues with multiple indicators at once)
-* Added Multithreading support via a custom use of the threading library Timer class
-* Tons of refactoring and optimizing for readbility and performance (hopefully)
+Also, check out my [concurrency tool](https://github.com/themichaelusa/AsyncPQ) (abstracts 90% of complexity away) for Python 3.
 
-**Basic Overview:**
-* Uses only native Python libraries (urllib, json) to scrape the Google/Yahoo Finance JSON/CSV data
-* Parses JSON, converts CSV, and formats historical & live data into Pandas Dataframe
-* Converts Dataframes to NumPy Arrays to form TA-Lib input dictionary
-* Indicator Object specifies dataframe attributes via Ticker and Timeframe
-* CustomTimer class splits the updating tasks into multiple threads
-* [TA-Lib Abstract API](https://mrjbq7.github.io/ta-lib/abstract.html) does remainder of the grunt work
+**Most Recent Update(7/24/2017):** 
+* Rewrote entire library for use in Trinitum Architecture 
+* Far faster and simpler than the previous version
 
 ## Installation
 ```
@@ -32,65 +23,27 @@ pip install realtime_talib
 ### Example:
 
 ```python
-import realtime_talib as rtt
+from realtime_talib import Indicator
 
-SPY_Ind = rtt.Indicator("SPY", "2016-01-01")
+OHLCV = .... (pandas dataframe with stock data)
+rt_BBANDS = Indicator(OHLCV, "BBANDS", 2, 2, 5, 3)
+rt_MA = Indicator(OHLCV, "AROON", 2, 1)
 	
-print SPY_Ind.MA(1, 3)
-print SPY_Ind.MACD(1, 12, 26, 9)[2]
-print SPY_Ind.RSI(1, 12, 26, 9)[2]
-print SPY_Ind.BBANDS(1, 2, 2, 10)[1]
-print SPY_Ind.RSI(1, 25)
+print(rt_MA.getHistorical(lag=1))
+tickData = (2800, 2700, 2600, 2900, 9394) # format of OHLCV
+print(rt_BBANDS.getRealtime(tickData, lag=2))
+print(rt_BBANDS.getRealtime(tickData, lag=2))
 
 ...
 
  Terminal Outputs:
- 226.92278436
- 0.0184101640085
- 227.320467648
- 62.1289093161
-```
-
-### Basic Use & Indicator Functions:
-
-* `Indicator(ticker, endDate)`
-
-* `Indicator.MA(ma_type, timeperiod)`
-* `Indicator.MACD(ma_type, fastperiod, slowperiod, signalperiod)`
-* `Indicator.RSI(ma_type, timeperiod)`
-* `Indicator.BBANDS(ma_type, nbdevup, nbdevdn, timeperiod)`
-
-(Check the docs at the [RTT Temporary Indicator Doc](https://shrib.com/9G1SclqXIIwm2Ep) for the full list.)
-
-### Other Useful Functions (Raw Data):
-
-* `pullLiveData(exch, ticker)`
-* `pullHistoricalData(ticker, endDate)`
-
-pullLiveData returns a 1D List, and pullHistoricalData returns a [TA-Lib Input Dictionary](https://mrjbq7.github.io/ta-lib/abstract.html)
-* `pullLiveData` format: `[ticker_data]`(0 = Current Time|1 = Current Price|2 = 15-Min Delayed Vol)
-
-(Functions support NASDAQ and NYSE, and all the tickers under them.)
-
-```python
-import realtime_talib as rtt
-from rtt import pipeline 
-
-# Inputs:
-print pullLiveData('NYSE','SPY')[1]
-pullHistoricalData('NVDA','2015-02-03')[1][2] 
-
-...
-
-Terminal Outputs:
-229.34
+ [2320.1911391450003, 2322.398211915, ..., 2809.4632536955473]
+ (2829.4632537420202, 2809.4632536955473, 2789.4632536490744)
+ (2829.4632537420202, 2809.4632536955473, 2789.4632536490744)
+	
 ```
 
 ## TODO
 
 - [ ] PyPI support (pip install...)
-- [x] Multi-threading support
-- [x] Parsing Yahoo Finance historical data
-- [x] Calculating Indicators on the fly
 - [ ] Add support for 40+ TA-Lib indicators
-- [ ] Matplotlib & Pyfolio integration (possibly)
