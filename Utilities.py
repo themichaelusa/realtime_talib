@@ -1,37 +1,38 @@
-import pipeline as pl
-import threading
-import time
 import math
+from numpy import nan
+import itertools as itert
 
-refreshTimer = TimerClass()
+KEY_VALS = ("open", "high", "low", "close", "volume")
 
-class TimerClass(threading.Thread):
+#--------- LIST OPERATION METHODS------------
 
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.event = threading.Event()
+def flattenList(listToFlatten):
 
-    def run(self):
-        while not self.event.is_set():
-            # print "Refresh thread for: "
-            self.event.wait(1)
+	nestedList = any(isinstance(sl, list) for sl in listToFlatten) 
+	if(nestedList == False): return listToFlatten
+	return [item for sublist in list(listToFlatten) for item in sublist]
 
-    def stop(self):
-        self.event.set()
-
-def updateInputDict(histData, liveData):
-
-	refreshTimer.start()
-	refreshTimer.sleep(65)
-	refreshTimer.stop()
+def extendList(listToExtend, extenMultiplier): 
 	
-	histData['close'][0] = liveData[1]
-	histData['volume'][0] = liveData[2]
+	extendedListTuple = tuple(itert.repeat(listToExtend, extenMultiplier))
+	return list(itert.chain.from_iterable(zip(*extendedListTuple)))
 
-	return histData
+#--------- TA-LIB OPERATION METHODS---------------------
 
-def firstNotNAN(talibOutput):
+def removeNaN(listToChange):
 
-	for i in range(len(talibOutput)):
-		if (math.isnan(talibOutput[i]) == False): 
-			return talibOutput[i]
+	index = 0
+	for i in listToChange:
+		if (math.isnan(i) == True):
+			index += 1
+		else: 
+			break
+	
+	return listToChange[index:]
+
+def getCurrentInds(indsToParse, lag):
+	
+	currentInds = [tuple([float(i[len(i)-1]) for i in indsToParse])]
+	laggedInds = extendList(currentInds, lag)
+	return laggedInds
+	
