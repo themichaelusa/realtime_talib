@@ -1,6 +1,5 @@
 import time
 import numpy as np
-import pandas as pd
 import Utilities as utl
 
 import talib as tb
@@ -8,7 +7,7 @@ from talib.abstract import *
 
 class TalibWrapper(object):
 
-	def __init__(self, indicator, iArgs, histOHLCV):
+	def __init__(self, histOHLCV, indicator, iArgs):
 
 		self.indicator, self.tbArgs = indicator, iArgs
 		self.inputs, self.histCache = None, []
@@ -36,9 +35,9 @@ class TalibWrapper(object):
 		try:
 
 			outputs = self.inputsDict[self.indicator](self.inputs, *self.tbArgs)
-			listOfLists = any(isinstance(sl, list) for sl in outputs)
+			listOfLists = any(isinstance(sl, np.ndarray) for sl in outputs) 
 
-			if (not listOfLists): outputs = [outputs]
+			if (listOfLists == False): outputs = [outputs]
 			outputs = [utl.removeNaN(techInd.tolist()) for techInd in outputs]
 			outputs = [utl.extendList(techInd, histLag) for techInd in outputs]
 

@@ -1,4 +1,4 @@
-from RealtimeTalib import Indicator
+from realtime_talib import Indicator
 import Utilities as utl
 import pandas as pd
 import ciso8601
@@ -30,4 +30,5 @@ OHLCV = getCryptoHistoricalData("USDT_BTC", "20170720", '20170723', 300)
 RT_MA = Indicator(OHLCV, "MA", 2, 1)
 
 tickData = (2800, 2700, 2600, 2900, 9394)
-print(RT_MA.getRealtime(tickData, 2)) # histData
+for i in range(10):
+	print(RT_MA.getRealtime(tickData, 2)) # histData
