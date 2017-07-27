@@ -1,9 +1,9 @@
-import TalibWrapper as tbw
+from .TalibWrapper import TalibWrapper
 
 class Indicator(object):
 
 	def __init__(self, dfOHLCV, ind, *indArgs):
-		self.tbWrapper = tbw.TalibWrapper(dfOHLCV, ind, indArgs)
+		self.tbWrapper = TalibWrapper(dfOHLCV, ind, indArgs)
 
 	def getRealtime(self, tickData, lag = 1):
 		return self.tbWrapper.getRealtimeIndicator(tickData, lag)

@@ -1,7 +1,7 @@
 import time
-import numpy as np
-import Utilities as utl
+from realtime_talib import Utilities as utl
 
+import numpy as np
 import talib as tb
 from talib.abstract import *
 
@@ -15,9 +15,44 @@ class TalibWrapper(object):
 		self.generateInputDict()
 
 		self.inputsDict = {
-		'MA': MA, #tbArgs:  ma_type, timeperiod
+		'MA': MA, #tbArgs: timeperiod, ma_type
 		'BBANDS': BBANDS, #tbArgs: timeperiod, nbdevup, nbdevdn, ma_type
-		'AROON': AROON
+		'HT_TRENDLINE': HT_TRENDLINE, #tbArgs: N/A
+		'MAVP': MAVP, #tbArgs: periods, minperiod, maxperiod, matype
+		'MIDPOINT': MIDPOINT, #tbArgs: timeperiod
+		'MIDPRICE': MIDPRICE, #tbArgs: timeperiod
+		'SAR': SAR, #tbArgs: acceleration, maximum
+		'SAREXT': SAREXT, #tbArgs: too long, pls google it
+		'ADX': ADX, #tbArgs: timeperiod
+		'ADXR': ADXR, #tbArgs: timeperiod
+		'APO': APO, #tbArgs: fastperiod, slowperiod, matype
+		'AROON': AROON, #tbArgs: timeperiod
+		'AROONOSC': AROONOSC, #tbArgs: timeperiod
+		'BOP': BOP, #tbArgs: N/A
+		'CCI': CCI, #tbArgs:  timeperiod
+		'CMO': CMO, #tbArgs:  timeperiod
+		'DX': DX, #tbArgs:  timeperiod
+		'MACD': MACD, #tbArgs: fastperiod=12, slowperiod=26, signalperiod=9
+		'MACDEXT': MACDEXT, #tbArgs: too long
+		'MACDFIX': MACDFIX,  #tbArgs: signalperiod=9
+		'MFI': MFI, #tbArgs: timeperiod
+		'MINUS_DI': MINUS_DI, #tbArgs: timeperiod
+		'MINUS_DM': MINUS_DM, #tbArgs: timeperiod
+		'MOM': MOM, #tbArgs: timeperiod
+		'PPO': PPO,  #tbArgs: fastperiod=12, slowperiod=26, matype=0, 
+		'RSI': RSI, 
+		'STOCH': STOCH,
+		'STOCHF': STOCHF, 
+		'STOCHRSI': STOCHRSI,
+		'TRIX': TRIX,
+		'ULTOSC': ULTOSC,
+		'WILLR': WILLR,
+		'AD': AD, 
+		'ADOSC': ADOSC,
+		'OBV': OBV,
+		'ATR': ATR,
+		'NATR': NATR,
+		'TRANGE': TRANGE
 		}    
 
 	def generateInputDict(self): 
