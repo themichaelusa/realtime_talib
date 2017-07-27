@@ -15,7 +15,7 @@ Also, check out my [concurrency tool](https://github.com/themichaelusa/AsyncPQ) 
 
 ## Installation
 ```
-pip install realtime_talib
+pip3 install realtime_talib
 ```
 
 ## Documentation
@@ -45,5 +45,5 @@ print(rt_BBANDS.getRealtime(tickData, lag=2))
 
 ## TODO
 
-- [ ] PyPI support (pip install...)
-- [ ] Add support for 40+ TA-Lib indicators
+- [x] PyPI support (pip install...)
+- [x] Add support for 40+ TA-Lib indicators
