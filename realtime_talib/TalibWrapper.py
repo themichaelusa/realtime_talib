@@ -67,18 +67,13 @@ class TalibWrapper(object):
 
 	def getIndicator(self, histLag):
 
-		try:
-
-			outputs = self.inputsDict[self.indicator](self.inputs, *self.tbArgs)
-			listOfLists = any(isinstance(sl, np.ndarray) for sl in outputs) 
-
-			if (listOfLists == False): outputs = [outputs]
-			outputs = [utl.removeNaN(techInd.tolist()) for techInd in outputs]
-			outputs = [utl.extendList(techInd, histLag) for techInd in outputs]
-
-			return outputs
-
-		except ValueError: pass
+		outputs = self.inputsDict[self.indicator](self.inputs, *self.tbArgs)
+		listOfLists = any(isinstance(sl, np.ndarray) for sl in outputs) 
+		if (listOfLists == False): outputs = [outputs]
+		outputs = [utl.removeNaN(techInd.tolist()) for techInd in outputs]
+		
+		if (histLag == utl.NO_LAG): return outputs
+		else: [utl.extendList(techInd, histLag) for techInd in outputs]
 
 	def getRealtimeIndicator(self, tickData, indLag):
 
@@ -89,7 +84,7 @@ class TalibWrapper(object):
 			self.histDF = self.histDF.append({k:float(v) for k,v in tickData}, ignore_index=True)
 
 			self.generateInputDict()
-			outputs = self.getIndicator(indLag) 
+			outputs = self.getIndicator(utl.NO_LAG) 
 			self.histCache = utl.getCurrentInds(outputs, indLag)
 		
 		return self.histCache.pop()

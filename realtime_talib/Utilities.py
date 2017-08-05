@@ -2,6 +2,7 @@ import math
 from numpy import nan
 import itertools as itert
 
+NO_LAG = 1
 KEY_VALS = ("open", "high", "low", "close", "volume")
 
 #--------- LIST OPERATION METHODS------------
@@ -29,4 +30,3 @@ def getCurrentInds(indsToParse, lag):
 	currentInds = [tuple([float(i[len(i)-1]) for i in indsToParse])]
 	laggedInds = extendList(currentInds, lag)
 	return laggedInds
-	
