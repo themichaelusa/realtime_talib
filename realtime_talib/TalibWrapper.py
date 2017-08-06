@@ -73,7 +73,7 @@ class TalibWrapper(object):
 		outputs = [utl.removeNaN(techInd.tolist()) for techInd in outputs]
 		
 		if (histLag == utl.NO_LAG): return outputs
-		else: [utl.extendList(techInd, histLag) for techInd in outputs]
+		else: return [utl.extendList(techInd, histLag) for techInd in outputs]
 
 	def getRealtimeIndicator(self, tickData, indLag):
 
