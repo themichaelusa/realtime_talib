@@ -1,5 +1,6 @@
 import time
 from realtime_talib import Utilities as utl
+from realtime_talib import Constants as cst
 
 import numpy as np
 import talib as tb
@@ -13,6 +14,9 @@ class TalibWrapper(object):
 		self.inputs, self.histCache = None, []
 		self.histDF = histOHLCV
 		self.generateInputDict()
+
+		histPeriod = histOHLCV['date'][len(histOHLCV)-1] - histOHLCV['date'][len(histOHLCV)-2]	
+		self.dfLookback = int(self.getMaxIndPeriod()*(cst.SECONDS_IN_DAY/histPeriod))
 
 		self.inputsDict = {
 		'MA': MA, #tbArgs: timeperiod, ma_type
@@ -53,7 +57,16 @@ class TalibWrapper(object):
 		'ATR': ATR,
 		'NATR': NATR,
 		'TRANGE': TRANGE
-		}    
+		}
+
+	def getMaxIndPeriod(self):
+		
+		if (self.indicator in cst.NO_PERIOD_INDS):
+			return 1 #range doesn't matter
+		if(self.indicator in cst.SINGLE_PERIOD_INDS):
+			return self.tbArgs[0]
+		if(self.indicator in cst.TWO_PERIOD_INDS):
+			return max(self.tbArgs[0], self.tbArgs[1])
 
 	def generateInputDict(self): 
 
@@ -72,19 +85,22 @@ class TalibWrapper(object):
 		if (listOfLists == False): outputs = [outputs]
 		outputs = [utl.removeNaN(techInd.tolist()) for techInd in outputs]
 		
-		if (histLag == utl.NO_LAG): return outputs
+		if (histLag == cst.NO_LAG): return outputs
 		else: return [utl.extendList(techInd, histLag) for techInd in outputs]
 
 	def getRealtimeIndicator(self, tickData, indLag):
 
 		if (self.histCache == []):
 
-			tickData = [(k,v) for k,v in zip(utl.KEY_VALS, tickData)]
+			tickData = [(k,v) for k,v in zip(cst.KEY_VALS, tickData)]
 			tickData.insert(0, ('date', time.time()))
+
 			self.histDF = self.histDF.append({k:float(v) for k,v in tickData}, ignore_index=True)
+			dfLen = len(self.histDF)-1
+			self.histDF = self.histDF.loc[(dfLen-self.dfLookback):dfLen]
 
 			self.generateInputDict()
-			outputs = self.getIndicator(utl.NO_LAG) 
+			outputs = self.getIndicator(cst.NO_LAG)
 			self.histCache = utl.getCurrentInds(outputs, indLag)
 		
 		return self.histCache.pop()

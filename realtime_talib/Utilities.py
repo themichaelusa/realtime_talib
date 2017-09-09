@@ -2,9 +2,6 @@ import math
 from numpy import nan
 import itertools as itert
 
-NO_LAG = 1
-KEY_VALS = ("open", "high", "low", "close", "volume")
-
 #--------- LIST OPERATION METHODS------------
 
 def extendList(listToExtend, extenMultiplier): 
