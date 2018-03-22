@@ -56,7 +56,9 @@ class TalibWrapper(object):
 		'OBV': OBV,
 		'ATR': ATR,
 		'NATR': NATR,
-		'TRANGE': TRANGE
+		'TRANGE': TRANGE,
+		'TEMA': TEMA,
+		'ROCR': ROCR
 		}
 
 	def getMaxIndPeriod(self):

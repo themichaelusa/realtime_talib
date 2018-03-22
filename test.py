@@ -51,12 +51,18 @@ class Pipeline(object):
 
 		return histDataframe[["date", "open", "high", "low", "close", "volume"]]
 
+""" # TEST RTT
 if __name__ == '__main__':
 	pl = Pipeline(interval=300)
 	df = pl.getCryptoHistoricalData(symbol='BTC-USD', endTime='20180201', histPeriod=30)
 
 	from realtime_talib import Indicator
 	obv = Indicator(df, 'OBV')
-	tema = Indicator(df, 'TEMA', 20)
+	trix = Indicator(df, 'TRIX', 20)
 	rocr = Indicator(df, 'ROCR', 20)
 	atr = Indicator(df, 'ATR', 20)
+
+	print(obv.getHistorical(), trix.getHistorical(), rocr.getHistorical(), atr.getHistorical())
+	test_ohlcv = [4000, 4100, 3900, 4200, 960]
+	print(obv.getRealtime(test_ohlcv), trix.getRealtime(test_ohlcv), rocr.getRealtime(test_ohlcv), atr.getRealtime(test_ohlcv))
+"""
